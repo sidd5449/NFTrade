@@ -2,7 +2,7 @@ import { Text } from 'react-native'
 
 const Details = () => {
   return (
-    <Text>Details</Text>
+    <Text>Details  of the NFT</Text>
   )
 }
 
