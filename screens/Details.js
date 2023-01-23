@@ -1,46 +1,76 @@
-import { useState } from "react"
-import { Text, SafeAreaView, View, Image, FlatList } from "react-native"
+import { View, Text, SafeAreaView, Image, StatusBar, FlatList } from 'react-native'
+import React from 'react'
+import { COLORS, FONTS, SIZES, SHADOWS, assets } from '../constants'
+import {CircleButton} from '../components/Button'
+import { RectButton } from '../components/Button'
+import {SubInfo} from '../components/SubInfo'
+import FocusedStatusBar from '../components/FocusedStatusBar'
+import DetailsBid from '../components/DetailsBid'
+import DetailsDesc from '../components/DetailsDesc'
 
-import {COLORS, NFTData, assets, SIZES} from '../constants';
-import NFTCard from '../components/NFTCard'
-import HomeHeader from '../components/HomeHeader'
-import FocusedStatusBar from "../components/FocusedStatusBar";
-import Home from "./Home";
-import DetailCard from "../components/DetailCard";
+const DetailsHeader = ({data, navigation}) =>(
+  <View
+    style={{width: '100%', height: 373}}
+  >
+    <Image 
+      source={data.image}
+      resizeMode='cover'
+      style={{ width: '100%', height: '100%' }}
+    />
+    <CircleButton 
+      imgUrl={assets.left}
+      handlePress = {() => navigation.goBack()}
+      left={15}
+      top={StatusBar.currentHeight + 10}
+    />
+    <CircleButton 
+      imgUrl={assets.heart}
+      // handlePress = {() => navigation.goBack()}
+      right={15}
+      top={StatusBar.currentHeight + 10}
+    />
+  </View>
+)
+const Details = ({ route, navigation }) => {
+  const {data} = route.params;
 
-
-const Details = () => {
   return (
     <SafeAreaView style={{flex:1}}>
-      <FocusedStatusBar background={COLORS.primary}/>
-      <View style={{flex:1, backgroundColor: COLORS.primary, flexDirection: 'column', padding: SIZES.font}}>
-
-        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-          <Image 
-            source={assets.logo}
-            resizeMode='contain'
-            style={{
-              width: 90,
-              height: 25,
-              
-            }}
-            
-          />
-          <View style={{width:45, height: 45}}>
-            <Image 
-              source={assets.person01}
-              resizeMode='contain'
-              style={{width: "100%", height: "100%", right: 0, top: 0}}
-
-            />
-          </View>
-          
-          </View>
-        </View>
-
-        
+      <FocusedStatusBar 
+        barStyle='dark-content'
+        backgroundColor='transparent'
+        translucent={true}
+      />
+      <View style={{
+        width: '100%',
+        position: 'absolute',
+        bottom: 0,
+        paddingVertical: SIZES.font,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(255,255,255,0.5)',
+        zIndex: 1
+      }}>
+        <RectButton
+          minWidth={170}
+          fontSize={SIZES.large}
+          {...SHADOWS.dark}
+        />
+      </View>
+      <FlatList 
+        data={data.bids}
+        renderItem={({item}) => <DetailsBid bid={item} />}
+        keyExtractor={(item) => item.id}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: SIZES.extraLarge*3 }}
+        ListHeaderComponent={() => (
+          <React.Fragment>
+            <DetailsHeader data={data} navigation={navigation}/>
+            <SubInfo />
+          </React.Fragment>
+        )}
+      />
     </SafeAreaView>
-
   )
 }
 
